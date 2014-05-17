@@ -1,0 +1,9 @@
+{
+  "name": "App",
+  "description": "backbone learning",
+  "author": "Michael Keisu <michael.keisu@gmail.com>",
+  "dependencies": {
+    "express": "4.1.0",
+    "body-parser": "1.0.2"
+  }
+}
