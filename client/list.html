@@ -15,7 +15,7 @@
 					<tr ng-repeat="book in books | filter:{title:bookTitle}">
 						<td>{{ book.title }}</td>
 						<td>{{ book.author }}</td>
-						<td><button ng-click="delete(book.id)">Delete</button></td>
+						<td><button ng-click="delete(book.id)" class="btn btn-sm btn-danger btn-default">Delete</button></td>
 					</tr>
 				</table>
 			</div> <!-- / .table-responsive -->
