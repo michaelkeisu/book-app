@@ -1,0 +1,24 @@
+<div ng-controller="bookController">
+
+	<div class="row search">
+		<label for="title">Search book: </label>
+		<input ng-model="bookTitle" type="text" class="input-sm">
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="table-responsive">
+				<table class="table">
+					<tr>
+						<th ng-repeat="label in labels">{{ label }}</th>
+					</tr>
+					<tr ng-repeat="book in books | filter:{title:bookTitle}">
+						<td>{{ book.title }}</td>
+						<td>{{ book.author }}</td>
+					</tr>
+				</table>
+			</div> <!-- / .table-responsive -->
+		</div> <!-- .col-md-4 -->
+	</div> <!-- / .row -->
+	
+</div> <!-- / ng-BookController -->
