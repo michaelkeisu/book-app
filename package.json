@@ -1,6 +1,6 @@
 {
   "name": "App",
-  "description": "backbone learning",
+  "description": "just a toy app",
   "author": "Michael Keisu <michael.keisu@gmail.com>",
   "dependencies": {
     "express": "4.1.0",

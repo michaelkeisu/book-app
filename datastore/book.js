@@ -15,7 +15,7 @@ module.exports = {
 		return books;
 	}, 
 	findBook: function (id) {
-		for (var i; i < books.length; i++) {
+		for (var i = 0; i < books.length; i++) {
 			if (books[i].id == id) {
 				return books[i];
 			}
@@ -29,6 +29,6 @@ module.exports = {
 				bookIndex = i;
 			}
 		}
-		books.splice(i, 1);
+		books.splice(bookIndex, 1);
 	}
 }

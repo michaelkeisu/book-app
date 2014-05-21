@@ -10,12 +10,28 @@ app.config(['$routeProvider', function($routeProvider){
 			templateUrl: 'new.html',
 			controller: 'newBookController'
 		})
+		.otherwise({redirectTo: '/books/'})
 }])
-
+/*
+	TOOO:
+	refactor out some stuff into something nicer
+*/
 app.controller('bookController', ['$scope', 'restfulApi', function($scope, restfulApi) {
 	restfulApi.list(function(books) {
 		$scope.books = books;
 	});
+
+	$scope.delete = function(id) {
+		restfulApi.delete(id, function() {
+			refreshBooks();
+		});
+
+	refreshBooks = function() {
+		restfulApi.list(function(books) {
+				$scope.books = books;
+			});
+		}
+	}
 	$scope.labels = [ 'Title', 'Author' ];
 }]);
 
@@ -39,6 +55,9 @@ app.factory('restfulApi', ['$http', function($http) {
 		},
 		'new': function(book, callback) {
 			$http.post('/books/', { 'title': book.title, 'author': book.author }).success(callback);
+		},
+		'delete': function(id, callback) {
+			$http.delete('/books/' + id).success(callback);
 		}
 	}
 }]);

@@ -1,12 +1,14 @@
 
 .container.body {
-	margin-top: 50px;
+	margin-top: 80px;
+	margin-left: 7px;
 }
 
 .search {
-	margin: 10px;
+	margin-left: 10px;
+	margin-bottom: 10px;
 }
 
 .bookForm {
-	margin: 10px;
+	margin-bottom: 10px;
 }
