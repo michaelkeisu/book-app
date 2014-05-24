@@ -11,6 +11,7 @@
 				<table class="table">
 					<tr>
 						<th ng-repeat="label in labels">{{ label }}</th>
+						<th></th>
 					</tr>
 					<tr ng-repeat="book in books | filter:{title:bookTitle}">
 						<td>{{ book.title }}</td>

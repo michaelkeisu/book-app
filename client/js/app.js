@@ -26,7 +26,7 @@ app.controller('bookController', ['$scope', 'restfulApi', function($scope, restf
 			refreshBooks();
 		});
 
-	refreshBooks = function() {
+	var refreshBooks = function() {
 		restfulApi.list(function(books) {
 				$scope.books = books;
 			});
