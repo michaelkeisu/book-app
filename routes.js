@@ -7,5 +7,4 @@ module.exports =  function (app) {
 	app.get('/books', bookAPI.getBooks);
 	app.get('/books/:id', bookAPI.findBook);
 	app.delete('/books/:id', bookAPI.removeBook);
-	
-}
+};

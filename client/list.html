@@ -2,7 +2,7 @@
 
 	<div class="row search">
 		<label for="title">Search book: </label>
-		<input ng-model="bookTitle" type="text" class="input-sm">
+		<input ng-model="bookTitle" type="text" class="input-sm" id="title">
 	</div>
 
 	<div class="row">
@@ -16,7 +16,7 @@
 					<tr ng-repeat="book in books | filter:{title:bookTitle}">
 						<td>{{ book.title }}</td>
 						<td>{{ book.author }}</td>
-						<td><button ng-click="delete(book.id)" class="btn btn-sm btn-danger btn-default">Delete</button></td>
+						<td><button ng-click="delete(book._id)" class="btn btn-sm btn-danger btn-default">Delete</button></td>
 					</tr>
 				</table>
 			</div> <!-- / .table-responsive -->

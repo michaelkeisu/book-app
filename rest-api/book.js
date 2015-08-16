@@ -1,48 +1,88 @@
-var bookDataStore = require('../datastore/book');
+var Book = require('../models/book');
 
 module.exports = {
-	createBook: function (req, res) {
-		var book = req.body;
-		console.log(req.body);
-		console.log('Saving book with the following structure ' + JSON.stringify(book));
-		bookDataStore.createBook(book);
-		res.send(book);
-	},
-	findBook: function (req, res) {
-		var book = bookDataStore.findBook(req.params.id);
-		console.log('Getting a book with id ' + req.params.id);	
-		if (book == null) {
-			console.log('Could not find book');
-			res.send(404);
-		} 
-		res.json(book);
-	},
-	getBooks: function (req, res) {
-		console.log('In GET function ');
-		res.json(bookDataStore.getBooks());
-	},
-	updateBook: function (req, res) {
-		var book = req.body;
-		console.log('Updating  Book ' + JSON.stringify(book));
-		var currentBook = bookDataStore.findBook(parseInt(req.params.id, 10));
-		if (currentBook == null) {
-			console.log('Could not find book');
-			res.send(404);
-		} 
-		currentBook.title = book.title;
-		currentBook.author = book.author;
-		currentBook.year = book.year;
-		res.send(book);
-		
-	},
-	removeBook: function (req, res) {
-		var book = bookDataStore.findBook(req.params.id);
-		if (book == null) {
-			console.log('Could not find book');
-			res.send(404);
-		}
-		console.log('Deleting ' + req.params.id);
-		bookDataStore.removeBook(req.params.id);
-		res.send(200);
-	}
+    createBook: function (req, res) {
+        var book = new Book();
+        book.title = req.body.title;
+        book.author = req.body.author;
+        book.year = req.body.year;
+        book.save(function (err) {
+            if (err) {
+                status500Message(res);
+            } else {
+                res.status(201).json({message: 'Book successfully created!'});
+            }
+        });
+    },
+    findBook: function (req, res) {
+        Book.findById(req.params.id, function (err, book) {
+            if (err) {
+                status500Message(res);
+                return;
+            }
+            if (book) {
+                res.status(200).json(book);
+            } else {
+                status404Message(res)
+            }
+        });
+    },
+    getBooks: function (req, res) {
+        Book.find(function (err, books) {
+            if (err) {
+                status500Message(res);
+            } else {
+                res.status(200).json(books);
+            }
+        });
+    },
+    updateBook: function (req, res) {
+        Book.findById(req.params.id, function (err, book) {
+                if (err) {
+                    status500Message(res);
+                    return;
+                }
+                if (!book) {
+                    status404message(res);
+                    return;
+                }
+                var requestBook = req.body;
+                if (requestBook.title) {
+                    book.title = requestBook.title;
+                }
+                if (requestBook.author) {
+                    book.author = requestBook.author;
+                }
+                if (requestBook.year) {
+                    book.year = requestBook.year;
+                }
+                book.save(function (err) {
+                    if (err) {
+                        status500Message(res);
+                    } else {
+                        res.status(200).json(this); // TODO verify
+                    }
+                });
+            }
+        )
+        ;
+    },
+    removeBook: function (req, res) {
+        Book.remove({
+            _id: req.params.id
+        }, function (err) {
+            if (err) {
+                status500Message(res);
+            } else {
+                res.status(200).json({message: 'Book successfully deleted.'});
+            }
+        });
+    }
+};
+
+function status500Message(res) {
+    res.status(500).json({message: 'Something went very wrong. Contact site admin.'});
+}
+function status404Message(res) {
+    res.status(404).json({message: 'Could not find any book with that id.'});
 }

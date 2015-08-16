@@ -2,8 +2,13 @@
   "name": "App",
   "description": "just a toy app",
   "author": "Michael Keisu <michael.keisu@gmail.com>",
+  "scripts": {
+    "": ""
+  },
   "dependencies": {
-    "express": "4.1.0",
-    "body-parser": "1.0.2"
+    "body-parser": "1.0.2",
+    "express": "4.13.3",
+    "mongoose": "^4.1.2",
+    "morgan": "^1.6.1"
   }
 }
