@@ -3,12 +3,16 @@
   "description": "just a toy app",
   "author": "Michael Keisu <michael.keisu@gmail.com>",
   "scripts": {
-    "": ""
+    "buildAll": "npm install && bower install",
+    "test": "./node_modules/mocha/bin/mocha --harmony"
   },
   "dependencies": {
     "body-parser": "1.0.2",
+    "chai": "^3.2.0",
     "express": "4.13.3",
+    "mocha": "^2.2.5",
     "mongoose": "^4.1.2",
-    "morgan": "^1.6.1"
+    "morgan": "^1.6.1",
+    "zombie": "^4.0.13"
   }
 }

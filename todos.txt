@@ -1,0 +1,9 @@
+ideas:
+
+
+technologies:
+* phantomjs tests
+* chai / superagent / mocha tests
+* gulp
+
+
