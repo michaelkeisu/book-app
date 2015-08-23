@@ -8,7 +8,7 @@ module.exports = {
         book.year = req.body.year;
         book.save(function (err) {
             if (err) {
-                status500Message(res);
+                res.status(500).json({message: STATUS_500_MESSAGE});
             } else {
                 res.status(201).json({message: 'Book successfully created!'});
             }
@@ -17,20 +17,20 @@ module.exports = {
     findBook: function (req, res) {
         Book.findById(req.params.id, function (err, book) {
             if (err) {
-                status500Message(res);
+                res.status(500).json({message: STATUS_500_MESSAGE});
                 return;
             }
             if (book) {
                 res.status(200).json(book);
             } else {
-                status404Message(res)
+                res.status(404).json({message: STATUS_404_MESSAGE});
             }
         });
     },
     getBooks: function (req, res) {
         Book.find(function (err, books) {
             if (err) {
-                status500Message(res);
+                res.status(500).json({message: STATUS_500_MESSAGE});
             } else {
                 res.status(200).json(books);
             }
@@ -39,11 +39,11 @@ module.exports = {
     updateBook: function (req, res) {
         Book.findById(req.params.id, function (err, book) {
                 if (err) {
-                    status500Message(res);
+                    res.status(500).json({message: STATUS_500_MESSAGE});
                     return;
                 }
                 if (!book) {
-                    status404message(res);
+                    res.status(404).json({message: STATUS_404_MESSAGE});
                     return;
                 }
                 var requestBook = req.body;
@@ -58,7 +58,7 @@ module.exports = {
                 }
                 book.save(function (err) {
                     if (err) {
-                        status500Message(res);
+                        res.status(500).json({message: STATUS_500_MESSAGE});
                     } else {
                         res.status(200).json(this); // TODO verify
                     }
@@ -72,7 +72,7 @@ module.exports = {
             _id: req.params.id
         }, function (err) {
             if (err) {
-                status500Message(res);
+                res.status(500).json({message: STATUS_500_MESSAGE});
             } else {
                 res.status(200).json({message: 'Book successfully deleted.'});
             }
@@ -80,9 +80,7 @@ module.exports = {
     }
 };
 
-function status500Message(res) {
-    res.status(500).json({message: 'Something went very wrong. Contact site admin.'});
-}
-function status404Message(res) {
-    res.status(404).json({message: 'Could not find any book with that id.'});
-}
+const STATUS_500_MESSAGE = 'Something went very wrong. Contact site admin.';
+
+
+const STATUS_404_MESSAGE = 'Could not find any book with that id.';
