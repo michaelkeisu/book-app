@@ -8,20 +8,26 @@ var express = require('express')
 
 var	app = express();
 var port = config.port;
-if (process.env.NODE_ENV !== 'test') {
-	app.use(morgan('tiny'));
-	mongoose.connect(config.database);
-} else {
+var testEnv = process.env.NODE_ENV === 'test';
+
+if (testEnv) {
 	mongoose.connect(config.testDatabase);
 	port = config.testPort;
+} else {
+	app.use(morgan('tiny'));
+	mongoose.connect(config.database);
 }
-// all environments
+
 app.set('port', port);
 app.use(express.static(path.join(__dirname, 'client')));
 app.use(bodyParser());
 
 require('./routes')(app);
 
-module.exports = app.listen(port, function () {
-	console.log('server started, listening to port ' + port);
-});
+module.exports = app;
+
+if(!testEnv) {
+	app.listen(port, function () {
+		console.log('server started, listening to port ' + port);
+	});
+}

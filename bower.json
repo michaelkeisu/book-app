@@ -1,0 +1,23 @@
+{
+  "name": "book-app",
+  "version": "0.0.0",
+  "homepage": "https://github.com/michaelkeisu/book-app",
+  "authors": [
+    "michaelkeisu <michael.keisu@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "client/vendor/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-route": "~1.4.4",
+    "bootstrap": "~3.3.5",
+    "angular": "~1.4.4",
+    "jquery": "~2.1.4"
+  }
+}

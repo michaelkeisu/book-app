@@ -1,3 +1,9 @@
+/*
+
+ TODO:
+ clean up code, refactor out some stuff into something nicer
+
+ */
 var app = angular.module('app.bookApp', ['ngRoute']);
 
 app.config(['$routeProvider', function($routeProvider){
@@ -12,16 +18,13 @@ app.config(['$routeProvider', function($routeProvider){
 		})
 		.otherwise({redirectTo: '/books/'})
 }]);
-/*
-	TODO:
-	refactor out some stuff into something nicer
-*/
+
 app.controller('bookController', ['$scope', 'restfulApi', function($scope, restfulApi) {
 	restfulApi.list(function(books) {
 		$scope.books = books;
 	});
 
-	$scope.delete = function(id) {
+	$scope.remove = function(id) {
 		restfulApi.delete(id, function() {
 			refreshBooks();
 		});

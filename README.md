@@ -1,4 +1,4 @@
 book-app
 ========
 
-Book app - just a very simple app to learn angular.js
+Book app - simple work in progress app I made to try out various libraries/modules
