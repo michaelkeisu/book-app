@@ -1,9 +1,5 @@
-ideas:
-
-
-technologies:
-* phantomjs tests
-* chai / superagent / mocha tests
+to try:
 * gulp
+* gulp-ng-annotate
 
 

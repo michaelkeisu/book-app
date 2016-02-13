@@ -1,66 +1,42 @@
-/*
+var app = angular.module('app.bookApp', ['ngRoute', 'ngResource']);
 
- TODO:
- clean up code, refactor out some stuff into something nicer
+app.config(function ($routeProvider) {
+    $routeProvider
+        .when('/books/', {
+            templateUrl: 'list.html',
+            controller: 'bookController'
+        })
+        .when('/books/new', {
+            templateUrl: 'new.html',
+            controller: 'newBookController'
+        })
+        .otherwise({redirectTo: '/books/'})
+});
 
- */
-var app = angular.module('app.bookApp', ['ngRoute']);
+app.controller('bookController', function ($scope, Book) {
+    $scope.labels = ['Title', 'Author'];
+    $scope.books = Book.query();
 
-app.config(['$routeProvider', function($routeProvider){
-	$routeProvider
-		.when('/books/', {
-			templateUrl: 'list.html',
-			controller: 'bookController'
-		})
-		.when('/books/new', {
-			templateUrl: 'new.html',
-			controller: 'newBookController'
-		})
-		.otherwise({redirectTo: '/books/'})
-}]);
+    $scope.remove = function (id) {
+        Book.delete({ id: id });
+        $scope.books = Book.query();
+    };
 
-app.controller('bookController', ['$scope', 'restfulApi', function($scope, restfulApi) {
-	restfulApi.list(function(books) {
-		$scope.books = books;
-	});
+});
 
-	$scope.remove = function(id) {
-		restfulApi.delete(id, function() {
-			refreshBooks();
-		});
-
-	var refreshBooks = function() {
-		restfulApi.list(function(books) {
-				$scope.books = books;
-			});
-		}
-	};
-	$scope.labels = [ 'Title', 'Author' ];
-}]);
-
-app.controller('newBookController', ['$scope', '$location', 'restfulApi', function($scope, $location, restfulApi) {
-	$scope.newPost = function() {
-		var book = {
-			title: $scope.title, 
-			author: $scope.author
-		};
-		restfulApi.new(book, function() {
-			$location.path('/books/');
-		})
-	}
-}]);
+app.controller('newBookController', function ($scope, $location, Book) {
+    $scope.newPost = function () {
+        var book = {
+            title: $scope.title,
+            author: $scope.author
+        };
+        Book.save(book, function () {
+            $location.path('/books/');
+        })
+    }
+});
 
 
-app.factory('restfulApi', ['$http', function($http) {
-	return {
-		'list': function(callback) {
-			$http.get('/books/').success(callback);
-		},
-		'new': function(book, callback) {
-			$http.post('/books/', { 'title': book.title, 'author': book.author }).success(callback);
-		},
-		'delete': function(id, callback) {
-			$http.delete('/books/' + id).success(callback);
-		}
-	}
-}]);
+app.factory('Book', function ($resource) {
+    return $resource('/books/:id');
+});
