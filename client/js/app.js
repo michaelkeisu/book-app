@@ -38,5 +38,5 @@ app.controller('newBookController', function ($scope, $location, Book) {
 
 
 app.factory('Book', function ($resource) {
-    return $resource('/books/:id');
+    return $resource('/rest/books/:id');
 });

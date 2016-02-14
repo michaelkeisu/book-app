@@ -9,7 +9,7 @@ var expect = require('chai').expect,
 describe('Some basic Book CRUD', function () {
     before(function (done) {
         this.server = require('../server').listen(config.testPort);
-        this.URL = 'http://127.0.0.1:' + config.testPort + '/books/';
+        this.URL = 'http://127.0.0.1:' + config.testPort + '/rest/books/';
         done();
     });
 
