@@ -7,16 +7,10 @@ var express = require('express')
 
 
 var app = express();
-var port = config.port;
 var testEnv = process.env.NODE_ENV === 'test';
 
-if (testEnv) {
-    mongoose.connect(config.testDatabase);
-    port = config.testPort;
-} else {
-    app.use(morgan('tiny'));
-    mongoose.connect(config.database);
-}
+var port = testEnv ? config.testPort : config.port;
+mongoose.connect(testEnv ? config.testDatabase : config.database);
 
 app.set('port', port);
 app.use(express.static(path.join(__dirname, 'client')));
@@ -27,6 +21,7 @@ require('./routes')(app);
 module.exports = app;
 
 if (!testEnv) {
+    app.use(morgan('tiny'));
     app.listen(port, () => {
         console.log('server started, listening to port ' + port);
     });

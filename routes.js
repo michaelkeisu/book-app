@@ -3,10 +3,8 @@ var express = require('express')
 
 
 module.exports = (app) => {
-    var restRouter = express.Router();
     var bookRouter = express.Router();
-    app.use('/rest', restRouter);
-    restRouter.use('/books', bookRouter);
+    app.use('/rest/books', bookRouter);
 
     bookRouter.route('/')
         .post(books.createBook)

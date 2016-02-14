@@ -65,7 +65,17 @@ describe('Some basic Book CRUD', () => {
             })
     });
 
-    it('should fail to post a book without required parameters', (done) => {
+    it('should fail to find deleted book', (done)  => {
+        var id = this.bookId;
+        request.get(this.URL + id)
+            .end((err, res) => {
+                expect(res.status).to.equal(404);
+                expect(res.body.message).to.equal('Could not find any book with the given id.');
+                done();
+            })
+    });
+
+    it('should fail to create a book without required parameters', (done) => {
         request.post(this.URL)
             .send({year: '1987'})
             .end((err, res) => {
@@ -78,17 +88,6 @@ describe('Some basic Book CRUD', () => {
                 done();
             })
     });
-
-    it('should fail to find deleted book', (done)  => {
-        var id = this.bookId;
-        request.get(this.URL + id)
-            .end((err, res) => {
-                expect(res.status).to.equal(404);
-                expect(res.body.message).to.equal('Could not find any book with the given id.');
-                done();
-            })
-    });
-
 
     // TODO: more tests
 
