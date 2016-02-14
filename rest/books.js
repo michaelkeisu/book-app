@@ -1,13 +1,12 @@
-'use strict';
 var Book = require('../models/book');
 
 module.exports = {
-    createBook: function (req, res) {
+    createBook: (req, res) => {
         var book = new Book();
         book.title = req.body.title;
         book.author = req.body.author;
         book.year = req.body.year;
-        book.save(function (err, book) {
+        book.save((err, book) => {
             if (err) {
                 res.status(500).json({errors: extractErrorMessages(err.errors)});
             } else {
@@ -15,11 +14,11 @@ module.exports = {
             }
         });
     },
-    findBook: function (req, res) {
-        Book.findById(req.params.id, function (err, book) {
+    findBook: (req, res) => {
+        Book.findById(req.params.id, (err, book) => {
             if (book) {
                 res.status(200).json(book);
-            } else if(!err && !book) {
+            } else if (!err && !book) {
                 res.status(404).json({message: STATUS_404_MESSAGE});
             } else {
                 res.status(500).json({message: STATUS_500_MESSAGE});
@@ -27,8 +26,8 @@ module.exports = {
 
         });
     },
-    getBooks: function (req, res) {
-        Book.find(function (err, books) {
+    getBooks: (req, res) => {
+        Book.find((err, books) => {
             if (err) {
                 res.status(500).json({message: STATUS_500_MESSAGE});
             } else {
@@ -36,8 +35,8 @@ module.exports = {
             }
         });
     },
-    updateBook: function (req, res) {
-        Book.findById(req.params.id, function (err, book) {
+    updateBook: (req, res) => {
+        Book.findById(req.params.id, (err, book) => {
                 if (err) {
                     res.status(500).json({message: STATUS_500_MESSAGE});
                     return;
@@ -56,7 +55,7 @@ module.exports = {
                 if (requestBook.year) {
                     book.year = requestBook.year;
                 }
-                book.save(function (err) {
+                book.save((err) => {
                     if (err) {
                         res.status(500).json({message: STATUS_500_MESSAGE});
                     } else {
@@ -67,10 +66,10 @@ module.exports = {
         )
         ;
     },
-    removeBook: function (req, res) {
+    removeBook: (req, res) => {
         Book.remove({
             _id: req.params.id
-        }, function (err) {
+        }, (err) => {
             if (err) {
                 res.status(500).json({message: STATUS_500_MESSAGE});
             } else {
@@ -82,7 +81,7 @@ module.exports = {
 
 function extractErrorMessages(pErrors) {
     var errors = [];
-    Object.keys(pErrors).forEach(function (error) {
+    Object.keys(pErrors).forEach((error) => {
         if (pErrors.hasOwnProperty(error)) {
             errors.push({
                 property: error,

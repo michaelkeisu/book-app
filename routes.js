@@ -1,10 +1,19 @@
-var books = require('./rest/books');
+var express = require('express')
+    , books = require('./rest/books');
 
 
-module.exports = function (app) {
-    app.post('/rest/books/', books.createBook);
-    app.put('/rest/books/:id', books.updateBook);
-    app.get('/rest/books', books.getBooks);
-    app.get('/rest/books/:id', books.findBook);
-    app.delete('/rest/books/:id', books.removeBook);
+module.exports = (app) => {
+    var restRouter = express.Router();
+    var bookRouter = express.Router();
+    app.use('/rest', restRouter);
+    restRouter.use('/books', bookRouter);
+
+    bookRouter.route('/')
+        .post(books.createBook)
+        .get(books.getBooks);
+    bookRouter.route('/:id')
+        .put(books.updateBook)
+        .get(books.findBook)
+        .delete(books.removeBook)
+
 };

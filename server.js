@@ -1,21 +1,21 @@
 var express = require('express')
- 	, path = require('path')
- 	, bodyParser = require('body-parser')
-	, mongoose = require('mongoose')
-	, morgan = require('morgan')
-	, config = require('./config');
+    , path = require('path')
+    , bodyParser = require('body-parser')
+    , mongoose = require('mongoose')
+    , morgan = require('morgan')
+    , config = require('./config');
 
 
-var	app = express();
+var app = express();
 var port = config.port;
 var testEnv = process.env.NODE_ENV === 'test';
 
 if (testEnv) {
-	mongoose.connect(config.testDatabase);
-	port = config.testPort;
+    mongoose.connect(config.testDatabase);
+    port = config.testPort;
 } else {
-	app.use(morgan('tiny'));
-	mongoose.connect(config.database);
+    app.use(morgan('tiny'));
+    mongoose.connect(config.database);
 }
 
 app.set('port', port);
@@ -26,8 +26,8 @@ require('./routes')(app);
 
 module.exports = app;
 
-if(!testEnv) {
-	app.listen(port, function () {
-		console.log('server started, listening to port ' + port);
-	});
+if (!testEnv) {
+    app.listen(port, () => {
+        console.log('server started, listening to port ' + port);
+    });
 }
