@@ -1,3 +1,4 @@
+'use strict';
 var Book = require('../models/book');
 
 module.exports = {
@@ -6,25 +7,24 @@ module.exports = {
         book.title = req.body.title;
         book.author = req.body.author;
         book.year = req.body.year;
-        book.save(function (err) {
+        book.save(function (err, book) {
             if (err) {
-                res.status(500).json({message: STATUS_500_MESSAGE});
+                res.status(500).json({errors: extractErrorMessages(err.errors)});
             } else {
-                res.status(201).json({message: 'Book successfully created!'});
+                res.status(201).json({id: book._id, message: 'Book successfully created!'});
             }
         });
     },
     findBook: function (req, res) {
         Book.findById(req.params.id, function (err, book) {
-            if (err) {
-                res.status(500).json({message: STATUS_500_MESSAGE});
-                return;
-            }
             if (book) {
                 res.status(200).json(book);
-            } else {
+            } else if(!err && !book) {
                 res.status(404).json({message: STATUS_404_MESSAGE});
+            } else {
+                res.status(500).json({message: STATUS_500_MESSAGE});
             }
+
         });
     },
     getBooks: function (req, res) {
@@ -60,7 +60,7 @@ module.exports = {
                     if (err) {
                         res.status(500).json({message: STATUS_500_MESSAGE});
                     } else {
-                        res.status(200).json(this); // TODO verify
+                        res.sendStatus(200);
                     }
                 });
             }
@@ -80,7 +80,21 @@ module.exports = {
     }
 };
 
+function extractErrorMessages(pErrors) {
+    var errors = [];
+    Object.keys(pErrors).forEach(function (error) {
+        if (pErrors.hasOwnProperty(error)) {
+            errors.push({
+                property: error,
+                type: pErrors[error].name,
+                message: pErrors[error].message
+            })
+        }
+    });
+    return errors;
+}
+
 const STATUS_500_MESSAGE = 'Something went very wrong. Contact site admin.';
 
 
-const STATUS_404_MESSAGE = 'Could not find any book with that id.';
+const STATUS_404_MESSAGE = 'Could not find any book with the given id.';
