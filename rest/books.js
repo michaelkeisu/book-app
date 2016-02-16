@@ -67,7 +67,7 @@ module.exports = {
         ;
     },
     removeBook: (req, res) => {
-        Book.remove({id: req.params.id}, (err) => {
+        Book.remove({_id: req.params.id}, (err) => {
             if (err) {
                 res.status(500).json({message: STATUS_500_MESSAGE});
             } else {
