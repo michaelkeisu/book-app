@@ -75,14 +75,22 @@ describe('Some basic Book CRUD', () => {
             })
     });
 
+    it('should fail to delete non-existing book', (done)  => {
+        var id = this.bookId;
+        request.get(this.URL + id)
+            .end((err, res) => {
+                expect(res.status).to.equal(404);
+                expect(res.body.message).to.equal('Could not find any book with the given id.');
+                done();
+            })
+    });
+
     it('should fail to create a book without required parameters', (done) => {
         request.post(this.URL)
             .send({year: '1987'})
             .end((err, res) => {
-                expect(res.status).to.eql(500);
+                expect(res.status).to.eql(400);
                 expect(res.body.errors.length).to.equal(2);
-                expect(res.body.errors[0].type).to.equal('ValidatorError');
-                expect(res.body.errors[1].type).to.equal('ValidatorError');
                 expect(res.body.errors[0].message).to.equal('Title is required');
                 expect(res.body.errors[1].message).to.equal('Author is required');
                 done();

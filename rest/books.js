@@ -8,7 +8,12 @@ module.exports = {
         book.year = req.body.year;
         book.save((err, book) => {
             if (err) {
-                res.status(500).json({errors: extractErrorMessages(err.errors)});
+                var validationErrors = extractValidationErrors(err.errors);
+                if (validationErrors.size == 0) {
+                    res.status(500).json({message: STATUS_500_MESSAGE})
+                } else {
+                    res.status(400).json({errors: validationErrors});
+                }
             } else {
                 res.status(201).json({id: book._id, message: 'Book successfully created!'});
             }
@@ -18,10 +23,10 @@ module.exports = {
         Book.findById(req.params.id, (err, book) => {
             if (book) {
                 res.status(200).json(book);
-            } else if (!err && !book) {
-                res.status(404).json({message: STATUS_404_MESSAGE});
-            } else {
+            } else if (err) {
                 res.status(500).json({message: STATUS_500_MESSAGE});
+            } else {
+                res.status(404).json({message: STATUS_404_MESSAGE});
             }
 
         });
@@ -67,9 +72,11 @@ module.exports = {
         ;
     },
     removeBook: (req, res) => {
-        Book.remove({_id: req.params.id}, (err) => {
+        Book.remove({_id: req.params.id}, (err, book) => {
             if (err) {
                 res.status(500).json({message: STATUS_500_MESSAGE});
+            } else if (!book) {
+                res.status(404).json({message: STATUS_404_MESSAGE});
             } else {
                 res.status(200).json({message: 'Book successfully deleted.'});
             }
@@ -77,15 +84,16 @@ module.exports = {
     }
 };
 
-function extractErrorMessages(pErrors) {
+function extractValidationErrors(pErrors) {
     var errors = [];
     Object.keys(pErrors).forEach((error) => {
         if (pErrors.hasOwnProperty(error)) {
-            errors.push({
-                property: error,
-                type: pErrors[error].name,
-                message: pErrors[error].message
-            });
+            if (pErrors[error].name === 'ValidatorError') {
+                errors.push({
+                    property: error,
+                    message: pErrors[error].message
+                });
+            }
         }
     });
     return errors;
