@@ -13,12 +13,25 @@ describe('Some basic Book CRUD', () => {
         done();
     });
 
+    it('should find empty list of books before any are added', (done) => {
+        request.get(this.URL)
+            .end((err, res) => {
+                expect(err).to.eql(null);
+                expect(res.status).to.equal(200);
+                var books = res.body;
+                expect(books.length).to.equal(0);
+                done();
+            })
+    });
+
     it('should succeed adding book', (done) => {
         var scope = this;
         request.post(this.URL)
             .send({title: 'The Art Of War', author: 'Sun Tzu', year: '500 BC'})
             .end((err, res) => {
                 expect(res.status).to.equal(201);
+                console.log(res.body.message);
+                expect(res.body.message).to.equal('Book successfully created!');
                 scope.bookId = res.body.id;
                 done();
             });
@@ -30,6 +43,7 @@ describe('Some basic Book CRUD', () => {
             .send({year: '~500 BC'})
             .end((err, res) => {
                 expect(res.status).to.equal(200);
+                expect(res.body.message).to.equal('Book successfully updated!');
                 Book.findById(id, (err, book) => {
                     expect(err).to.eql(null);
                     expect(book.year).to.equal('~500 BC');
@@ -57,7 +71,8 @@ describe('Some basic Book CRUD', () => {
         request.del(this.URL + id)
             .end((err, res) => {
                 expect(res.status).to.equal(200);
-                var book = Book.findById(id, (err, book) => {
+                expect(res.body.message).to.equal('Book successfully deleted!');
+                Book.findById(id, (err, book) => {
                     expect(err).to.eql(null);
                     expect(book).to.eql(null);
                     done();

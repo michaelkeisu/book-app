@@ -21,10 +21,10 @@ module.exports = {
     },
     findBook: (req, res) => {
         Book.findById(req.params.id, (err, book) => {
-            if (book) {
-                res.status(200).json(book);
-            } else if (err) {
+            if (err) {
                 res.status(500).json({message: STATUS_500_MESSAGE});
+            } else if (book) {
+                res.status(200).json(book);
             } else {
                 res.status(404).json({message: STATUS_404_MESSAGE});
             }
@@ -64,7 +64,7 @@ module.exports = {
                     if (err) {
                         res.status(500).json({message: STATUS_500_MESSAGE});
                     } else {
-                        res.sendStatus(200);
+                        res.status(200).json({message: 'Book successfully updated!'});
                     }
                 });
             }
@@ -75,10 +75,10 @@ module.exports = {
         Book.remove({_id: req.params.id}, (err, book) => {
             if (err) {
                 res.status(500).json({message: STATUS_500_MESSAGE});
-            } else if (!book) {
-                res.status(404).json({message: STATUS_404_MESSAGE});
+            } else if (book) {
+                res.status(200).json({message: 'Book successfully deleted!'});
             } else {
-                res.status(200).json({message: 'Book successfully deleted.'});
+                res.status(404).json({message: STATUS_404_MESSAGE});
             }
         });
     }
