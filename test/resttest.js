@@ -35,13 +35,12 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should succeed updating a book', (done) => {
-        var id = bookId;
-        request.put(URL + id)
+        request.put(URL + bookId)
             .send({year: '~500 BC'})
             .end((err, res) => {
                 expect(res.status).to.equal(200);
                 expect(res.body.message).to.equal('Book successfully updated!');
-                Book.findById(id, (err, book) => {
+                Book.findById(bookId, (err, book) => {
                     expect(err).to.eql(null);
                     expect(book.year).to.equal('~500 BC');
                     done();
@@ -50,8 +49,7 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should find a book with a given id', (done) => {
-        var id = bookId;
-        request.get(URL + id)
+        request.get(URL + bookId)
             .end((err, res) => {
                 expect(res.status).to.equal(200);
                 var book = res.body;
@@ -64,12 +62,11 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should succeed deleting a book', (done) => {
-        var id = bookId;
-        request.del(URL + id)
+        request.del(URL + bookId)
             .end((err, res) => {
                 expect(res.status).to.equal(200);
                 expect(res.body.message).to.equal('Book successfully deleted!');
-                Book.findById(id, (err, book) => {
+                Book.findById(bookId, (err, book) => {
                     expect(err).to.eql(null);
                     expect(book).to.eql(null);
                     done();
@@ -78,8 +75,7 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should fail to find deleted book', (done)  => {
-        var id = bookId;
-        request.get(URL + id)
+        request.get(URL + bookId)
             .end((err, res) => {
                 expect(res.status).to.equal(404);
                 expect(res.body.message).to.equal('Could not find any book with the given id.');
@@ -88,8 +84,7 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should fail to delete non-existing book', (done)  => {
-        var id = bookId;
-        request.get(URL + id)
+        request.get(URL + bookId)
             .end((err, res) => {
                 expect(res.status).to.equal(404);
                 expect(res.body.message).to.equal('Could not find any book with the given id.');
@@ -108,8 +103,6 @@ describe('Some basic Book CRUD', () => {
                 done();
             })
     });
-
-    // TODO: more tests
 
     after((done) => {
         server.close();
