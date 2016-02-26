@@ -5,4 +5,7 @@ Book app - work in progress app. Something I made to try out various libraries/m
 
 requires MongoDB and Node 5.x
 
-see package.json for scripts to run
+- "npm run installAll" to install server & client dependencies.
+- "npm start" to run server.
+
+see package.json for other scripts to run
