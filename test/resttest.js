@@ -1,20 +1,18 @@
-process.env.NODE_ENV = 'test';
-
-var expect = require('chai').expect,
-    config = require('../config'),
-    Book = require('../models/book'),
-    request = require('superagent');
-
+import config from '../config'
+import {expect} from 'chai'
+import Book from '../models/book'
+import request from 'superagent'
+import app from '../server'
 
 describe('Some basic Book CRUD', () => {
     before((done) => {
-        this.server = require('../server').listen(config.testPort);
-        this.URL = 'http://127.0.0.1:' + config.testPort + '/rest/books/';
+        global.server = app.listen(config.testPort);
+        global.URL = 'http://127.0.0.1:' + config.testPort + '/rest/books/';
         done();
     });
 
     it('should find empty list of books before any are added', (done) => {
-        request.get(this.URL)
+        request.get(URL)
             .end((err, res) => {
                 expect(err).to.eql(null);
                 expect(res.status).to.equal(200);
@@ -25,21 +23,20 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should succeed adding book', (done) => {
-        var scope = this;
-        request.post(this.URL)
+        request.post(URL)
             .send({title: 'The Art Of War', author: 'Sun Tzu', year: '500 BC'})
             .end((err, res) => {
                 expect(res.status).to.equal(201);
                 console.log(res.body.message);
                 expect(res.body.message).to.equal('Book successfully created!');
-                scope.bookId = res.body.id;
+                global.bookId = res.body.id;
                 done();
             });
     });
 
     it('should succeed updating a book', (done) => {
-        var id = this.bookId;
-        request.put(this.URL + id)
+        var id = bookId;
+        request.put(URL + id)
             .send({year: '~500 BC'})
             .end((err, res) => {
                 expect(res.status).to.equal(200);
@@ -53,8 +50,8 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should find a book with a given id', (done) => {
-        var id = this.bookId;
-        request.get(this.URL + id)
+        var id = bookId;
+        request.get(URL + id)
             .end((err, res) => {
                 expect(res.status).to.equal(200);
                 var book = res.body;
@@ -67,8 +64,8 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should succeed deleting a book', (done) => {
-        var id = this.bookId;
-        request.del(this.URL + id)
+        var id = bookId;
+        request.del(URL + id)
             .end((err, res) => {
                 expect(res.status).to.equal(200);
                 expect(res.body.message).to.equal('Book successfully deleted!');
@@ -81,8 +78,8 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should fail to find deleted book', (done)  => {
-        var id = this.bookId;
-        request.get(this.URL + id)
+        var id = bookId;
+        request.get(URL + id)
             .end((err, res) => {
                 expect(res.status).to.equal(404);
                 expect(res.body.message).to.equal('Could not find any book with the given id.');
@@ -91,8 +88,8 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should fail to delete non-existing book', (done)  => {
-        var id = this.bookId;
-        request.get(this.URL + id)
+        var id = bookId;
+        request.get(URL + id)
             .end((err, res) => {
                 expect(res.status).to.equal(404);
                 expect(res.body.message).to.equal('Could not find any book with the given id.');
@@ -101,7 +98,7 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should fail to create a book without required parameters', (done) => {
-        request.post(this.URL)
+        request.post(URL)
             .send({year: '1987'})
             .end((err, res) => {
                 expect(res.status).to.eql(400);
@@ -115,7 +112,7 @@ describe('Some basic Book CRUD', () => {
     // TODO: more tests
 
     after((done) => {
-        this.server.close();
+        server.close();
         Book.remove({}, (err) => {
             expect(err).to.eql(null);
             done();

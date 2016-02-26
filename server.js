@@ -1,10 +1,10 @@
-var express = require('express')
-    , path = require('path')
-    , bodyParser = require('body-parser')
-    , mongoose = require('mongoose')
-    , morgan = require('morgan')
-    , config = require('./config');
-
+import express from 'express'
+import path from 'path'
+import bodyParser from 'body-parser'
+import mongoose from 'mongoose'
+import morgan from 'morgan'
+import config from './config'
+import routes from './rest/index.js'
 
 var app = express();
 var testEnv = process.env.NODE_ENV === 'test';
@@ -16,13 +16,13 @@ app.set('port', port);
 app.use(express.static(path.join(__dirname, 'client')));
 app.use(bodyParser());
 
-require('./routes')(app);
+routes(app);
 
-module.exports = app;
+export default app;
 
 if (!testEnv) {
     app.use(morgan('tiny'));
     app.listen(port, () => {
-        console.log('server started, listening to port ' + port);
+        console.log(`server started, listening to port ${port}`);
     });
 }

@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose'
 
 var BookSchema = mongoose.Schema({
 	title: { type: String, required: 'Title is required' },
@@ -7,4 +7,4 @@ var BookSchema = mongoose.Schema({
 });
 
 
-module.exports = mongoose.model('Book', BookSchema);
+export default mongoose.model('Book', BookSchema);

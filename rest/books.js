@@ -1,6 +1,6 @@
-var Book = require('../models/book');
+import Book from '../models/book'
 
-module.exports = {
+export default {
     createBook: (req, res) => {
         var book = new Book();
         book.title = req.body.title;

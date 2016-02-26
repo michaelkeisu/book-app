@@ -3,17 +3,24 @@
   "description": "just a toy app",
   "author": "Michael Keisu <michael.keisu@gmail.com>",
   "scripts": {
-    "buildAll": "npm install && bower install",
-    "test": "./node_modules/mocha/bin/mocha --harmony"
+    "start": "babel-node server.js",
+    "clean": "rm -rf ./node_modules",
+    "installAll": "npm install && bower install",
+    "test": "NODE_ENV=test ./node_modules/mocha/bin/mocha"
   },
   "dependencies": {
+    "babel-cli": "^6.5.1",
+    "babel-preset-es2015": "^6.5.0",
     "body-parser": "1.0.2",
-    "chai": "^3.2.0",
-    "express": "4.13.3",
-    "mocha": "^2.2.5",
+    "express": "^4.13.4",
     "mongoose": "^4.1.2",
     "morgan": "^1.6.1",
     "superagent": "^1.3.0",
     "zombie": "^4.0.13"
+  },
+  "devDependencies": {
+    "babel-register": "^6.5.2",
+    "mocha": "^2.4.5",
+    "chai": "^3.2.0"
   }
 }

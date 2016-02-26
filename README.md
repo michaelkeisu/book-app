@@ -3,17 +3,6 @@ book-app
 
 Book app - work in progress app. Something I made to try out various libraries/modules
 
+requires MongoDB and Node 5.x
 
-Requires MongoDB installed
-
-- To fetch server & frontend dependencies, run this script:
-
-npm run buildAll
-
-- To run tests:
-
-npm run test
-
-- To run server:
-
-node server
+see package.json for scripts to run

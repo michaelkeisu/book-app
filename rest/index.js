@@ -1,8 +1,8 @@
-var express = require('express')
-    , books = require('./rest/books');
+import express from 'express'
+import books from './books'
 
 
-module.exports = (app) => {
+export default function(app) {
     var bookRouter = express.Router();
     app.use('/rest/books', bookRouter);
 
