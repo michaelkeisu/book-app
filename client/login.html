@@ -1,0 +1,14 @@
+<div ng-controller="loginController">
+    <form role="form">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input ng-model="username" type="text" placeholder="Username" class="form-control" id="username"/>
+        </div> <!-- / .form-group -->
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input ng-model="password" type="password" placeholder="Password" class="form-control" id="password"/>
+        </div><!-- / .form-group -->
+        <button ng-click="login()" class="btn btn-sm btn-default">Login</button>
+        <button ng-click="register()" class="btn btn-sm btn-default">Register</button>
+    </form>
+</div> <!-- / ng-loginController -->

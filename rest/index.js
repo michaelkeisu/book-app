@@ -1,17 +1,27 @@
 import express from 'express'
+import passport from '../config/passport-strategy'
 import books from './books'
+import users from './users'
 
+export default function (app) {
+    var restRouter = express.Router(),
+        bookRouter = express.Router(),
+        userRouter = express.Router();
 
-export default function(app) {
-    var bookRouter = express.Router();
-    app.use('/rest/books', bookRouter);
+    app.use(passport.initialize());
+    app.use('/rest', restRouter);
 
-    bookRouter.route('/')
+    restRouter.use(userRouter);
+    userRouter.post('/users/signup', users.signup);
+    userRouter.post('/users/authenticate', users.authenticate);
+
+    restRouter.use(bookRouter);
+    //bookRouter.use(passport.authenticate('jwt', {session: false}));
+    bookRouter.route('/books/')
         .post(books.createBook)
         .get(books.getBooks);
-    bookRouter.route('/:id')
+    bookRouter.route('/books/:id')
         .put(books.updateBook)
         .get(books.findBook)
-        .delete(books.removeBook)
-
+        .delete(books.removeBook);
 };

@@ -3,7 +3,7 @@ import path from 'path'
 import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
 import morgan from 'morgan'
-import config from './config'
+import config from './config/config'
 import routes from './rest/index.js'
 
 var app = express();
@@ -14,7 +14,8 @@ mongoose.connect(testEnv ? config.testDatabase : config.database);
 
 app.set('port', port);
 app.use(express.static(path.join(__dirname, 'client')));
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 routes(app);
 
