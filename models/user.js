@@ -7,9 +7,7 @@ var UserSchema = new Schema({
     password: {type: String, required: 'Password is required.'}
 });
 
-
-// interestingly arrow function syntax does not work here.. find out why
-UserSchema.pre('save', function(next) {
+UserSchema.pre('save', function (next) {
     var user = this;
     if (user.isModified('password') || user.isNew) {
         bcrypt.genSalt(10, function (err, salt) {
@@ -29,10 +27,9 @@ UserSchema.pre('save', function(next) {
     }
 });
 
-
-UserSchema.methods.comparePassword = (password, callback) => {
-    bcrypt.comparePassword(password, this.password, (err, isMatch) => {
-        if(err) {
+UserSchema.methods.comparePassword = function (password, callback) {
+    bcrypt.compare(password, this.password, (err, isMatch) => {
+        if (err) {
             callback(err);
         }
         callback(null, isMatch);

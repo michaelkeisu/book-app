@@ -7,25 +7,30 @@ import app from '../server'
 
 describe('Some basic Book CRUD', () => {
     before((done) => {
+        var baseUrl = 'http://127.0.0.1:' + config.testPort + '/rest';
         global.server = app.listen(config.testPort);
-        global.URL = 'http://127.0.0.1:' + config.testPort + '/rest/books/';
-        request.post('http://127.0.0.1:' + config.testPort + '/rest/users/signup')
+        global.BOOK_URL = baseUrl + '/books/';
+        request.post(baseUrl + '/users/signup')
             .send({username: 'janedoe', password: 'qwerty'})
             .end((err, res) => {
                 expect(err).to.eql(null);
                 expect(res.status).to.equal(201);
+                request.post(baseUrl + '/users/authenticate')
+                    .send({username: 'janedoe', password: 'qwerty'})
+                    .end((err, res) => {
+                        expect(err).to.eql(null);
+                        expect(res.status).to.equal(200);
+                        expect(res.token).not.to.eql(null);
+                        global.token = res.body.token;
+                        done();
+                    });
             });
-        request.post('http://127.0.0.1:' + config.testPort + '/rest/users/authenticate')
-            .send({username: 'janedoe', password: 'qwerty'})
-            .end((err, res) => {
-                expect(err).to.eql(null);
-                expect(res.status).to.equal(201);
-                done();
-            });
+
     });
 
     it('should find empty list of books before any are added', (done) => {
-        request.get(URL)
+        request.get(BOOK_URL)
+            .set('Authorization', token)
             .end((err, res) => {
                 expect(err).to.eql(null);
                 expect(res.status).to.equal(200);
@@ -36,7 +41,8 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should succeed adding book', (done) => {
-        request.post(URL)
+        request.post(BOOK_URL)
+            .set('Authorization', token)
             .send({title: 'The Art Of War', author: 'Sun Tzu', year: '500 BC'})
             .end((err, res) => {
                 expect(res.status).to.equal(201);
@@ -47,7 +53,8 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should succeed updating a book', (done) => {
-        request.put(URL + bookId)
+        request.put(BOOK_URL + bookId)
+            .set('Authorization', token)
             .send({year: '~500 BC'})
             .end((err, res) => {
                 expect(res.status).to.equal(200);
@@ -61,7 +68,8 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should find a book with a given id', (done) => {
-        request.get(URL + bookId)
+        request.get(BOOK_URL + bookId)
+            .set('Authorization', token)
             .end((err, res) => {
                 expect(res.status).to.equal(200);
                 var book = res.body;
@@ -74,7 +82,8 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should succeed deleting a book', (done) => {
-        request.del(URL + bookId)
+        request.del(BOOK_URL + bookId)
+            .set('Authorization', token)
             .end((err, res) => {
                 expect(res.status).to.equal(200);
                 expect(res.body.message).to.equal('Book successfully deleted!');
@@ -87,7 +96,8 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should fail to find deleted book', (done) => {
-        request.get(URL + bookId)
+        request.get(BOOK_URL + bookId)
+            .set('Authorization', token)
             .end((err, res) => {
                 expect(res.status).to.equal(404);
                 expect(res.body.message).to.equal('Could not find book with the given id.');
@@ -96,7 +106,8 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should fail to delete non-existing book', (done) => {
-        request.get(URL + bookId)
+        request.get(BOOK_URL + bookId)
+            .set('Authorization', token)
             .end((err, res) => {
                 expect(res.status).to.equal(404);
                 expect(res.body.message).to.equal('Could not find book with the given id.');
@@ -105,7 +116,8 @@ describe('Some basic Book CRUD', () => {
     });
 
     it('should fail to create a book without required parameters', (done) => {
-        request.post(URL)
+        request.post(BOOK_URL)
+            .set('Authorization', token)
             .send({year: '1987'})
             .end((err, res) => {
                 expect(res.status).to.eql(400);

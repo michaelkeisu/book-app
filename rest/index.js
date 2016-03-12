@@ -16,7 +16,7 @@ export default function (app) {
     userRouter.post('/users/authenticate', users.authenticate);
 
     restRouter.use(bookRouter);
-    //bookRouter.use(passport.authenticate('jwt', {session: false}));
+    bookRouter.use(passport.authenticate('jwt', {session: false}));
     bookRouter.route('/books/')
         .post(books.createBook)
         .get(books.getBooks);
