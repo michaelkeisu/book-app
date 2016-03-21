@@ -16,12 +16,13 @@ function authenticate(req, res) {
             return res.sendStatus(500);
         }
         if (!user) {
-            return res.status(404).json({message: 'Could not find user with the given username.'});
+            // we dont want to reveal whether user exists
+            return res.status(401).json({message: 'Authentication failed.'});
         }
         user.comparePassword(req.body.password, (err, isMatch) => {
             if (isMatch && !err) {
                 var token = jwt.encode(user, config.secret);
-                res.status(200).json({message: 'Login successful!', token: 'JWT ' + token});
+                res.status(200).json({token: 'JWT ' + token});
             } else {
                 res.status(401).json({message: 'Authentication failed.'});
             }
@@ -39,17 +40,17 @@ function signup(req, res) {
 
     user.save((err) => {
         if (err) {
-            if(err.code == '11000'){
+            if (err.code == '11000') {
                 return res.status(400).json({message: 'An user with this username already exists'});
             }
             var validationErrors = extractErrors(err);
             if (validationErrors) {
-                res.status(400).json({message: 'Validation failed.', errors: validationErrors});
+                res.status(400).json({message: 'Validation failed.', validationErrors: validationErrors});
             } else {
                 res.status(500).json({message: STATUS_500_MESSAGE});
             }
         } else {
-            res.status(201).json({id: user._id, message: 'Successfully created new user.'})
+            res.status(201).json({id: user._id})
         }
     });
 }

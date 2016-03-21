@@ -1,4 +1,12 @@
 <div ng-controller="loginController">
+    <div ng-if="message" class="error">
+        <p>{{message}}</p>
+        <ul>
+            <li ng-repeat="validationError in validationErrors">
+                {{validationError}}
+            </li>
+        </ul>
+    </div>
     <form role="form">
         <div class="form-group">
             <label for="username">Username</label>
