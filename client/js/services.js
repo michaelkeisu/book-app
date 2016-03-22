@@ -25,13 +25,13 @@ app.factory('tokenInterceptor', function ($window, $location, $q) {
             if (token) {
                 config.headers.Authorization = token;
             } else {
-                $location.path('/books')
+                $location.path('/books/login')
             }
             return config;
         },
         response: function (response) {
             if (response.status === 401) {
-                $location.path('/books');
+                $location.path('/books/login');
             }
             return response || $q.when(response);
         }

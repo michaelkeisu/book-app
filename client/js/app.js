@@ -4,7 +4,7 @@ app.config(function ($routeProvider, $httpProvider) {
     $httpProvider.interceptors.push('tokenInterceptor');
 
     $routeProvider
-        .when('/books', {
+        .when('/books/login', {
             templateUrl: 'login.html',
             controller: 'loginController'
         })
@@ -16,5 +16,5 @@ app.config(function ($routeProvider, $httpProvider) {
             templateUrl: 'new.html',
             controller: 'bookController'
         })
-        .otherwise({redirectTo: '/books/'})
+        .otherwise({redirectTo: '/books/login'})
 });
