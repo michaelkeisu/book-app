@@ -16,7 +16,6 @@ function authenticate(req, res) {
             return res.sendStatus(500);
         }
         if (!user) {
-            // we dont want to reveal whether user exists
             return res.status(401).json({message: 'Authentication failed.'});
         }
         user.comparePassword(req.body.password, (err, isMatch) => {

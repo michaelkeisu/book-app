@@ -24,16 +24,16 @@ app.controller('loginController', function ($scope, $window, $location, User) {
     $scope.register = function () {
         console.log($scope.username);
         User.signup({
-            username: $scope.username,
-            password: $scope.password
-        }, function () {
-            login();
-        }, function (error) {
-            if (error.status == 400) {
-                $scope.message = error.data.message;
-                $scope.validationErrors = error.data.validationErrors;
-            }
-        });
+                username: $scope.username,
+                password: $scope.password
+            },
+            login,
+            function (error) {
+                if (error.status == 400) {
+                    $scope.message = error.data.message;
+                    $scope.validationErrors = error.data.validationErrors;
+                }
+            });
     };
 });
 
