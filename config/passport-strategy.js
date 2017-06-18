@@ -1,15 +1,21 @@
-import {Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt'
-import passport from 'passport'
-import User from '../models/user'
-import config from  './config'
+const passport = require('passport');
+const passportJwt = require('passport-jwt');
+
+const {
+    Strategy,
+    ExtractJwt
+} = passportJwt;
+
+const User = require('../models/user');
+const config = require('./config');
 
 
-var opts = {};
+const opts = {};
 
 opts.secretOrKey = config.secret;
 opts.jwtFromRequest = ExtractJwt.fromAuthHeader();
 
-passport.use(new JwtStrategy(opts, (jwtPayload, done) => {
+passport.use(new Strategy(opts, (jwtPayload, done) => {
     User.findOne({id: jwtPayload.id}, (err, user) => {
         if (err) {
             return done(err);
@@ -22,4 +28,4 @@ passport.use(new JwtStrategy(opts, (jwtPayload, done) => {
     });
 }));
 
-export default passport
+module.exports = passport;

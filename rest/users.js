@@ -1,12 +1,12 @@
-import User from '../models/user'
-import config from '../config/config'
-import jwt from 'jwt-simple'
-import extractErrors from '../utils/extract-errors'
+const User = require('../models/user');
+const config = require('../config/config');
+const jwt = require('jwt-simple');
+const extractErrors = require('../utils/extract-errors');
 
-export default {
+module.exports =  {
     authenticate: authenticate,
     signup: signup
-}
+};
 
 function authenticate(req, res) {
     User.findOne({
@@ -20,7 +20,7 @@ function authenticate(req, res) {
         }
         user.comparePassword(req.body.password, (err, isMatch) => {
             if (isMatch && !err) {
-                var token = jwt.encode(user, config.secret);
+                const token = jwt.encode(user, config.secret);
                 res.status(200).json({token: 'JWT ' + token});
             } else {
                 res.status(401).json({message: 'Authentication failed.'});
@@ -30,10 +30,9 @@ function authenticate(req, res) {
 }
 
 function signup(req, res) {
-    var username = req.body.username;
-    var password = req.body.password;
+    const {username, password} = req.body;
 
-    var user = new User({
+    const user = new User({
         username: username,
         password: password
     });
@@ -43,7 +42,7 @@ function signup(req, res) {
             if (err.code == '11000') {
                 return res.status(400).json({message: 'An user with this username already exists'});
             }
-            var validationErrors = extractErrors(err);
+            const validationErrors = extractErrors(err);
             if (validationErrors) {
                 res.status(400).json({message: 'Validation failed.', validationErrors: validationErrors});
             } else {

@@ -1,13 +1,13 @@
-import config from '../config/config'
-import {expect} from 'chai'
-import Book from '../models/book'
-import User from '../models/user'
-import request from 'superagent'
-import app from '../server'
+const config = require('../config/config');
+const expect = require('chai').expect;
+const Book = require( '../models/book');
+const User = require('../models/user');
+const request = require('superagent');
+const app = require('../server');
 
 describe('Some basic Book CRUD', () => {
     before((done) => {
-        var baseUrl = 'http://127.0.0.1:' + config.testPort + '/rest';
+        const baseUrl = 'http://127.0.0.1:' + config.testPort + '/rest';
         global.server = app.listen(config.testPort);
         global.BOOK_URL = baseUrl + '/books/';
         request.post(baseUrl + '/users/signup')
@@ -34,7 +34,7 @@ describe('Some basic Book CRUD', () => {
             .end((err, res) => {
                 expect(err).to.eql(null);
                 expect(res.status).to.equal(200);
-                var books = res.body;
+                const books = res.body;
                 expect(books.length).to.equal(0);
                 done();
             })
@@ -72,7 +72,7 @@ describe('Some basic Book CRUD', () => {
             .set('Authorization', token)
             .end((err, res) => {
                 expect(res.status).to.equal(200);
-                var book = res.body;
+                const book = res.body;
                 expect(err).to.eql(null);
                 expect(book.title).to.equal('The Art Of War');
                 expect(book.author).to.equal('Sun Tzu');

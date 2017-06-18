@@ -1,14 +1,14 @@
-import mongoose from 'mongoose'
-import bcrypt from 'bcrypt'
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
-var Schema = mongoose.Schema;
-var UserSchema = new Schema({
+const Schema = mongoose.Schema;
+const UserSchema = new Schema({
     username: {type: String, required: 'Username is required.', unique: 'Username must be unique.'},
     password: {type: String, required: 'Password is required.'}
 });
 
 UserSchema.pre('save', function (next) {
-    var user = this;
+    const user = this;
     if (user.isModified('password') || user.isNew) {
         bcrypt.genSalt(10, function (err, salt) {
             if (err) {
@@ -36,4 +36,4 @@ UserSchema.methods.comparePassword = function (password, callback) {
     });
 };
 
-export default mongoose.model('User', UserSchema)
+module.exports = mongoose.model('User', UserSchema)

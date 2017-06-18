@@ -1,7 +1,7 @@
-import Book from '../models/book'
-import extractErrors from '../utils/extract-errors'
+const Book = require('../models/book');
+const extractErrors = require('../utils/extract-errors');
 
-export default {
+module.exports = {
     createBook: createBook,
     findBook: findBook,
     getBooks: getBooks,
@@ -10,13 +10,14 @@ export default {
 };
 
 function createBook(req, res) {
-    var book = new Book();
-    book.title = req.body.title;
-    book.author = req.body.author;
-    book.year = req.body.year;
+    const book = new Book();
+    const {title, author, year} = req.body;
+    book.title = title;
+    book.author = author;
+    book.year = year;
     book.save((err, book) => {
         if (err) {
-            var validationErrors = extractErrors(err);
+            const validationErrors = extractErrors(err);
             if (validationErrors) {
                 res.status(400).json({message: 'Validation failed.', errors: validationErrors});
             } else {
@@ -58,15 +59,15 @@ function updateBook(req, res) {
             if (!book) {
                 return res.status(404).json({message: STATUS_404_MESSAGE});
             }
-            var requestBook = req.body;
-            if (requestBook.title) {
-                book.title = requestBook.title;
+            const {title, author, year} = req.body;
+            if (title) {
+                book.title = title;
             }
-            if (requestBook.author) {
-                book.author = requestBook.author;
+            if (author) {
+                book.author = author;
             }
-            if (requestBook.year) {
-                book.year = requestBook.year;
+            if (year) {
+                book.year = year;
             }
             book.save((err) => {
                 if (err) {

@@ -1,15 +1,15 @@
-import express from 'express'
-import path from 'path'
-import bodyParser from 'body-parser'
-import mongoose from 'mongoose'
-import morgan from 'morgan'
-import config from './config/config'
-import routes from './rest/index.js'
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const morgan = require('morgan');
+const config = require('./config/config.js');
+const routes = require('./rest/index.js');
 
-var app = express();
-var testEnv = process.env.NODE_ENV === 'test';
+const app = express();
+const testEnv = process.env.NODE_ENV === 'test';
 
-var port = testEnv ? config.testPort : config.port;
+const port = testEnv ? config.testPort : config.port;
 mongoose.connect(testEnv ? config.testDatabase : config.database);
 
 app.set('port', port);
@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 
 routes(app);
 
-export default app;
+module.exports = app;
 
 if (!testEnv) {
     app.use(morgan('tiny'));

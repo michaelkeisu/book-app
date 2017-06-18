@@ -1,10 +1,10 @@
-import express from 'express'
-import passport from '../config/passport-strategy'
-import books from './books'
-import users from './users'
+const express = require('express');
+const passport = require('../config/passport-strategy');
+const books = require('./books');
+const users = require('./users');
 
-export default function (app) {
-    var restRouter = express.Router(),
+module.exports = function (app) {
+    const restRouter = express.Router(),
         bookRouter = express.Router(),
         userRouter = express.Router();
 
