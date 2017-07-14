@@ -133,11 +133,7 @@ describe('Some basic Book CRUD', () => {
 
     after((done) => {
         server.close();
-        Book.remove({}).then(() => {
-            User.remove({}).then(() => {
-                done();
-            }).catch((err) => expect(err).to.eql(null));
-        }).catch((err) => expect(err).to.eql(null));
-
+        Book.remove({})
+            .then(User.remove({}).then(() => done()))
     });
 });
