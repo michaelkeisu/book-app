@@ -1,6 +1,6 @@
 const config = require('../config/config');
 const expect = require('chai').expect;
-const Book = require( '../models/book');
+const Book = require('../models/book');
 const User = require('../models/user');
 const request = require('superagent');
 const app = require('../server');
@@ -59,10 +59,11 @@ describe('Some basic Book CRUD', () => {
             .end((err, res) => {
                 expect(res.status).to.equal(200);
                 expect(res.body.message).to.equal('Book successfully updated!');
-                Book.findById(bookId, (err, book) => {
-                    expect(err).to.eql(null);
+                Book.findById(bookId).then((book) => {
                     expect(book.year).to.equal('~500 BC');
                     done();
+                }).catch((err) => {
+                    expect(err).to.eql(null);
                 });
             })
     });
@@ -87,10 +88,11 @@ describe('Some basic Book CRUD', () => {
             .end((err, res) => {
                 expect(res.status).to.equal(200);
                 expect(res.body.message).to.equal('Book successfully deleted!');
-                Book.findById(bookId, (err, book) => {
-                    expect(err).to.eql(null);
+                Book.findById(bookId).then((book) => {
                     expect(book).to.eql(null);
                     done();
+                }).catch((err) => {
+                    expect(err).to.eql(null);
                 });
             })
     });
@@ -131,12 +133,11 @@ describe('Some basic Book CRUD', () => {
 
     after((done) => {
         server.close();
-        Book.remove({}, (err) => {
-            expect(err).to.eql(null);
-        });
-        User.remove({}, (err) => {
-            expect(err).to.eql(null);
-            done();
-        })
+        Book.remove({}).then(() => {
+            User.remove({}).then(() => {
+                done();
+            }).catch((err) => expect(err).to.eql(null));
+        }).catch((err) => expect(err).to.eql(null));
+
     });
 });

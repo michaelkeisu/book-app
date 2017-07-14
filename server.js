@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+mongoose.Promise = require('q').Promise;
 const morgan = require('morgan');
 const config = require('./config/config.js');
 const routes = require('./rest/index.js');

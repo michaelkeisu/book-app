@@ -16,15 +16,14 @@ opts.secretOrKey = config.secret;
 opts.jwtFromRequest = ExtractJwt.fromAuthHeader();
 
 passport.use(new Strategy(opts, (jwtPayload, done) => {
-    User.findOne({id: jwtPayload.id}, (err, user) => {
-        if (err) {
-            return done(err);
-        }
+    User.findOne({id: jwtPayload.id}).then((user) => {
         if (user) {
             done(null, user);
         } else {
             done(null, false);
         }
+    }).catch((err) => {
+        done(err);
     });
 }));
 

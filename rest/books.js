@@ -2,11 +2,11 @@ const Book = require('../models/book');
 const extractErrors = require('../utils/extract-errors');
 
 module.exports = {
-    createBook: createBook,
-    findBook: findBook,
-    getBooks: getBooks,
-    updateBook: updateBook,
-    removeBook: removeBook
+    createBook,
+    findBook,
+    getBooks,
+    updateBook,
+    removeBook
 };
 
 function createBook(req, res) {
@@ -15,47 +15,38 @@ function createBook(req, res) {
     book.title = title;
     book.author = author;
     book.year = year;
-    book.save((err, book) => {
-        if (err) {
-            const validationErrors = extractErrors(err);
-            if (validationErrors) {
-                res.status(400).json({message: 'Validation failed.', errors: validationErrors});
-            } else {
-                res.status(500).json({message: STATUS_500_MESSAGE})
-            }
-        } else {
-            res.status(201).json({id: book._id, message: 'Book successfully created!'});
+    book.save().then((book) => {
+        res.status(201).json({id: book._id, message: 'Book successfully created!'});
+    }).catch((err) => {
+        const validationErrors = extractErrors(err);
+        if (validationErrors) {
+            return res.status(400).json({message: 'Validation failed.', errors: validationErrors});
         }
+        res.status(500).json({message: STATUS_500_MESSAGE})
     });
 }
 
 function findBook(req, res) {
-    Book.findById(req.params.id, (err, book) => {
-        if (err) {
-            res.status(500).json({message: STATUS_500_MESSAGE});
-        } else if (book) {
-            res.status(200).json(book);
-        } else {
-            res.status(404).json({message: STATUS_404_MESSAGE});
+    Book.findById(req.params.id).then((book) => {
+        if (!book) {
+            return res.status(404).json({message: STATUS_404_MESSAGE});
         }
-    });
+        res.status(200).json(book);
+    }).catch(() => {
+        res.status(500).json({message: STATUS_500_MESSAGE});
+    })
 }
 
 function getBooks(req, res) {
-    Book.find((err, books) => {
-        if (err) {
-            res.status(500).json({message: STATUS_500_MESSAGE});
-        } else {
-            res.status(200).json(books);
-        }
-    });
+    Book.find().then((books) => {
+        res.status(200).json(books);
+    }).catch(() => {
+        res.status(500).json({message: STATUS_500_MESSAGE});
+    })
 }
 
 function updateBook(req, res) {
-    Book.findById(req.params.id, (err, book) => {
-            if (err) {
-                return res.status(500).json({message: STATUS_500_MESSAGE});
-            }
+    Book.findById(req.params.id).then((book) => {
             if (!book) {
                 return res.status(404).json({message: STATUS_404_MESSAGE});
             }
@@ -69,26 +60,25 @@ function updateBook(req, res) {
             if (year) {
                 book.year = year;
             }
-            book.save((err) => {
-                if (err) {
-                    res.status(500).json({message: STATUS_500_MESSAGE});
-                } else {
-                    res.status(200).json({message: 'Book successfully updated!'});
-                }
+            book.save().then(() => {
+                res.status(200).json({message: 'Book successfully updated!'});
+            }).catch(() => {
+                res.status(500).json({message: STATUS_500_MESSAGE})
             });
         }
-    );
+    ).catch(() => {
+        res.status(500).json({message: STATUS_500_MESSAGE});
+    });
 }
 
 function removeBook(req, res) {
-    Book.remove({_id: req.params.id}, (err, book) => {
-        if (err) {
-            res.status(500).json({message: STATUS_500_MESSAGE});
-        } else if (book) {
-            res.status(200).json({message: 'Book successfully deleted!'});
-        } else {
-            res.status(404).json({message: STATUS_404_MESSAGE});
+    Book.remove({_id: req.params.id}).then((book) => {
+        if (!book) {
+            return res.status(404).json({message: STATUS_404_MESSAGE});
         }
+        res.status(200).json({message: 'Book successfully deleted!'});
+    }).catch(() => {
+        res.status(500).json({message: STATUS_500_MESSAGE});
     });
 }
 
