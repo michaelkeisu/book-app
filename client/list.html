@@ -1,26 +1,29 @@
 <div ng-controller="bookController">
 
-	<div class="row search">
-		<label for="title">Search book: </label>
-		<input ng-model="bookTitle" type="text" class="form-control" id="title">
-	</div>
+    <div class="row search">
+        <label for="title">Search book: </label>
+        <input ng-model="bookTitle" type="text" class="form-control" id="title">
+    </div>
 
-	<div class="row">
-		<div class="col-md-6">
-			<div class="table-responsive">
-				<table class="table">
-					<tr>
-						<th ng-repeat="label in labels">{{ label }}</th>
-						<th></th>
-					</tr>
-					<tr ng-repeat="book in books | filter:{title:bookTitle}">
-						<td>{{ book.title }}</td>
-						<td>{{ book.author }}</td>
-						<td><button ng-click="remove(book._id)" class="btn btn-sm btn-danger btn-default">Delete</button></td>
-					</tr>
-				</table>
-			</div> <!-- / .table-responsive -->
-		</div> <!-- .col-md-4 -->
-	</div> <!-- / .row -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th ng-repeat="label in labels">{{ label }}</th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="book in books | filter:{title:bookTitle}">
+                        <td>{{ book.title }}</td>
+                        <td>{{ book.author }}</td>
+                        <td>
+                            <button ng-click="remove(book._id)" class="btn btn-sm btn-danger btn-default">Delete
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div> <!-- / .table-responsive -->
+        </div> <!-- .col-md-4 -->
+    </div> <!-- / .row -->
 
 </div> <!-- / ng-BookController -->
