@@ -12,7 +12,7 @@ module.exports = {
 async function createBook(req, res) {
     try {
         const {title, author, year} = req.body;
-        const b = new Book({title, author, year});
+        const b = new Book();
         b.title = title;
         b.author = author;
         b.year = year;

@@ -35,7 +35,7 @@ async function signup(req, res) {
             username,
             password
         });
-        const user = await u.save()
+        const user = await u.save();
         res.status(201).json({id: user._id})
     } catch (err) {
         if (err.code === '11000') {
